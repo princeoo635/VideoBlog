@@ -4,7 +4,7 @@ const userSchema=new mongoose.Schema(
     {
         username:{
             type:String,
-            require:true,
+            required:true,
             unique:true,
             lowercase:true,
             trim:true,
@@ -12,24 +12,24 @@ const userSchema=new mongoose.Schema(
         },
         email:{
             type:String,
-            require:true,
+            required:true,
             unique:true,
             lowercase:true,
             trim:true,
         },
         fullname:{
             type:String,
-            require:true,
+            required:true,
             trim:true,
             index:true
         },
         avatar:{
             type:String,
-            require:true,
+            required:true,
         },
         coverImage:{
             type:String,
-            require:true,
+            required:true,
         },
         watchHistory:[
             {
@@ -39,7 +39,7 @@ const userSchema=new mongoose.Schema(
         ],
         Password:{
             type:String,
-            require:[true,'Password is required!']
+            required:[true,'Password is requiredd!']
         },
         refreshToken:{
             type:String
