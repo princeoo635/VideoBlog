@@ -39,28 +39,28 @@ const userSchema=new mongoose.Schema(
                 ref:"Video"
             }
         ],
-        Password:{
+        password:{
             type:String,
-            required:[true,'Password is requiredd!']
+            required:[true,'password is requiredd!']
         },
         refreshToken:{
             type:String
         }
     },
-{timeseries:true})
+{timestamps:true})
 
-// hashing Password
+// hashing password
 userSchema.pre("save",async function (next) {
-    if(!this.isModified("Password")){
+    if(!this.isModified("password")){
         return next();
     }
-    this.Password=await bcrypt.hash(this.Password,10);
+    this.password=await bcrypt.hash(this.password,10);
     next();
-})
+}) 
 
-userSchema.methods.isPasswordCorrect=
-    async function (Password) {
-    return await bcrypt.compare(Password,this.Password)
+userSchema.methods.ispasswordCorrect=
+    async function (password) {
+    return await bcrypt.compare(password,this.password)
     }
 // Generating jwt token
 userSchema.methods.generateAccessToken=async function () {
