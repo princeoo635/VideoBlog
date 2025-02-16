@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { ApiError } from "../utils/ApiError.js";
 
 const userSchema=new mongoose.Schema(
     {
@@ -57,13 +58,19 @@ userSchema.pre("save",async function (next) {
     next();
 }) 
 
-userSchema.methods.ispasswordCorrect=
+userSchema.methods.isPasswordCorrect=
     async function (password) {
-    return await bcrypt.compare(password,this.password)
+    return bcrypt.compare(password,this.password)
+    .then(validePassword=>
+         validePassword
+    )
+    .catch(err=>{
+        throw new ApiError(400,"Invalid Password")
+    })
     }
 // Generating jwt token
 userSchema.methods.generateAccessToken=async function () {
-    jwt.sign(
+    return jwt.sign(
         {
             _id:this._id,
             email:this.email,
@@ -76,7 +83,7 @@ userSchema.methods.generateAccessToken=async function () {
 }
 // Generate refresh token
 userSchema.methods.generateRefreshToken=async function () {
-    jwt.sign(
+    return jwt.sign(
         {
             _id:this._id,
         },
