@@ -20,6 +20,6 @@ router.route("/publish").post(
 )
 
 router.route("/getvideo/:videoId").post(verifyJWT,getVideoById)
-router.route("/updatevideo").patch(verifyJWT,upload.single("thumbnail"),updateVideo)
+router.route("/updatevideo/:videoId").patch(verifyJWT,upload.single("thumbnail"),updateVideo)
 
 export default router
