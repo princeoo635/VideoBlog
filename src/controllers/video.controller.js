@@ -8,7 +8,7 @@ import { uploadOnCloudinary } from "../utils/cloudinary.js";
 
 const publishVideo = asyncHandler(async(req,res)=>{
     const {title,description} = req.body;
-    if(!(title || description)){
+    if(!(title && description)){
         throw new ApiError(401,"Title and description are required.")
     }
     const videoLocalPath=req.files?.videofile[0]?.path;
@@ -61,7 +61,7 @@ const getVideoById = asyncHandler(async(req,res)=>{
         throw new ApiError(400,"provide video id.")
     }
     const {title,description}=req.body
-    if(!(title || description)){
+    if(!(title && description)){
         throw new ApiError(400,"Title or description are missing.")
     }
     const thumbnailLocalPath=req.file?.path;
