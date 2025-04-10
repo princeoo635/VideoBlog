@@ -92,8 +92,21 @@ const getVideoById = asyncHandler(async(req,res)=>{
     
 })
 
+const deleteVideo = asyncHandler(async(req,res)=>{
+    const { videoId } = req.params
+    if(!videoId){
+        throw new ApiError(400,"video id is missing.")
+    }
+     await Video.findByIdAndDelete(videoId)
+     return res.status(200)
+     .json(
+        new ApiResponse(200,[],"video deleted successfully.")
+     )
+})
+
 export {
     publishVideo,
     getVideoById,
-    updateVideo
+    updateVideo,
+    deleteVideo
 }
