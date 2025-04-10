@@ -56,8 +56,31 @@ const getPlaylistById = asyncHandler(async(req,res)=>{
     )
 })
 
+const addVideoToPlaylist = asyncHandler(async (req, res) => {
+    const {playlistId, videoId} = req.params
+    if(!(playlistId && videoId)){
+        throw new ApiError(400,"Playlist or video id is missing.")
+    }
+    const playlist = await Playlist.findByIdAndUpdate(
+        playlistId,
+        {
+            $set:{
+            videos:videos.push(videoId)
+            }
+        },
+        {
+            new:true
+        }
+    )
+    return res.status(200)
+    .json(
+        new ApiResponse(200,playlist,"video added to playlist.")
+    )
+})
+
 export {
     createPlaylist,
     getUserPlaylist,
-    getPlaylistById
+    getPlaylistById,
+    addVideoToPlaylist,
 }
