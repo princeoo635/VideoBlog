@@ -31,7 +31,7 @@ const getUserPlaylist = asyncHandler(async(req,res)=>{
     if(!userId){
         throw new ApiError(400,"Invalid User id.")
     }
-    const playlist = await Playlist.findById(userId);
+    const playlist = await Playlist.find({owner:userId});
     if(!playlist){
         throw new ApiError(400,"User didn't create any playlist.")
     }
@@ -44,11 +44,11 @@ const getUserPlaylist = asyncHandler(async(req,res)=>{
 const getPlaylistById = asyncHandler(async(req,res)=>{
     const { playlistId } = req.params
     if(!playlistId){
-        throw new ApiError(400,"Invalid playlist Id.")
+        throw new ApiError(404,"Invalid playlist Id.")
     }
     const playlist = await Playlist.findById(playlistId)
     if(!playlist){
-        throw new ApiError(400,"No such playlist exists ")
+        throw new ApiError(404,"No such playlist exists ")
     }
     return res.status(200)
     .json(
@@ -64,8 +64,8 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
     const playlist = await Playlist.findByIdAndUpdate(
         playlistId,
         {
-            $set:{
-            videos:videos.push(videoId)
+            $push:{
+            videos:videoId
             }
         },
         {
@@ -76,6 +76,28 @@ const addVideoToPlaylist = asyncHandler(async (req, res) => {
     .json(
         new ApiResponse(200,playlist,"video added to playlist.")
     )
+})
+
+const removeVideoFromPlaylist = asyncHandler(async (req, res) => {
+    const {playlistId, videoId} = req.params
+    if(!playlistId){
+        throw new ApiError(400,"Playlist Id is not defined.")
+    }
+    const playlist = await Playlist.findByIdAndUpdate(
+        playlistId,
+        {
+          $pull: { videos: videoId }  // Removes all instances of videoId
+        },
+        { new: true }
+      );
+      if(!playlist){
+        throw new ApiError(404,"Playlist not found.")
+      }
+      return res.status(200)
+      .json(
+        new ApiResponse(200,playlist,"video removed successfully.")
+      )
+
 })
 
 export {
